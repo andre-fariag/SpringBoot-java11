@@ -1,25 +1,37 @@
 package com.educandoweb.course.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class User implements Serializable{
+@Table(name = "tb_user")
+public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private Long id; 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private String email;
-	private String phone; 
-	private String password; 
-	
-	public User () {
+	private String phone;
+	private String password;
+
+	@JsonIgnore // impede que o programa entre em loop (Causa: Associacao de mao dupla)
+	@OneToMany(mappedBy = "client")
+	private List<Order> orders = new ArrayList<>(); // associacao com a classe Order -> um usuario pode ter varios
+													// pedidos. (Um para muitos)
+
+	public User() {
 	}
 
 	public User(Long id, String name, String email, String phone, String password) {
@@ -29,6 +41,10 @@ public class User implements Serializable{
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 	public Long getId() {
@@ -70,7 +86,7 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -101,10 +117,5 @@ public class User implements Serializable{
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + ", password=" + password
 				+ "]";
 	}
-	
-	
-	
-	
-	
 
 }
