@@ -42,7 +42,8 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "id.order") // um pedido pode ter varios OrderItems que sarao armazenados no Set
     private Set<OrderItem> items = new HashSet<>();
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL) // cascade -> exigido pelo mapeamento um para um com o mesmo id entre eles
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL) // cascade -> exigido pelo mapeamento um para um com o
+                                                             // mesmo id entre eles
     private Payment payment;
 
     public Order() {
@@ -99,6 +100,14 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Double getTotal() { // obs no padrao JavaEE sempre utilizamos a palavra get no inicio dos métodos.
+        double sum = 0.0;
+        for (OrderItem x : items) {
+            sum += x.getSubTotal();
+        }
+        return sum;
     }
 
     @Override
