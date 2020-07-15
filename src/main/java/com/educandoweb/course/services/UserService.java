@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> obj = repository.findById(id); // acessa o banco de dados
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // erro "condicional".
     }
 
     public User insert (User obj){
